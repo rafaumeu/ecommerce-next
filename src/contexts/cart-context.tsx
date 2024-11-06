@@ -2,29 +2,29 @@
 import { createContext, useContext, useState } from "react";
 
 interface CartItem {
-  productsId: string
+  productId: number
   quantity: number
 }
 interface CartContextType {
   items: CartItem[]
-  addToCart: (productsId: string) => void
+  addToCart: (productId: number) => void
 }
 const CartContext = createContext({} as CartContextType);
 
 export function CartProvider({children}: {children: React.ReactNode}) {
   const [cartItems, setCartItem] = useState<CartItem[]>([])
-  function addToCart(productsId: string) {
+  function addToCart(productId: number) {
     setCartItem(state => {
-      const productInCart = state.some(item => item.productsId === productsId)
+      const productInCart = state.some(item => item.productId === productId)
       if(productInCart) {
         return state.map(item => {
-          if(item.productsId === productsId) {
+          if(item.productId === productId) {
             return {...item, quantity: item.quantity + 1}
           }
           return item
         })
       }else {
-        return[...state, {productsId, quantity: 1}]
+        return[...state, {productId, quantity: 1}]
       }
     })
   }
