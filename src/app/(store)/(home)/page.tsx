@@ -1,5 +1,6 @@
 import { api } from "@/data/api";
 import { Product } from "@/data/types/product";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,6 +12,10 @@ async function getFeaturedProducts(): Promise<Product[]> {
   const products = await response.json()
   return products
 }
+
+export const metadata: Metadata = {
+  title: "Home"
+}
 export default async function Home() {
   
   const [highLightedProduct, ...otherProducts] = await getFeaturedProducts()
@@ -19,13 +24,13 @@ export default async function Home() {
       <Link href={`/product/${highLightedProduct.slug}`} className="group relative col-span-6 row-span-6 rounded-lg bg-zinc-900 overflow-hidden flex justify-center items-end">
         <Image
           src={highLightedProduct.image}
-          alt="" 
+          alt={highLightedProduct.title} 
           width={920}
           height={920}
           quality={100}
           className="group-hover:scale-105 transition duration-500"
         />
-        <div className="absolute bottom-28 right-28 flex items-center gap-2 max-w-[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
+        <div className="absolute bottom-28 right-28 h-12 flex items-center gap-2 max-w-[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
           <span className="text-sm truncate">{highLightedProduct.title}</span>
           <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
             {highLightedProduct.price.toLocaleString('pt-BR',
@@ -49,14 +54,14 @@ export default async function Home() {
           >
             <Image
               src={product.image}
-              alt="" 
+              alt={product.title} 
               width={920}
               height={920}
               quality={100}
               className="group-hover:scale-105 transition duration-500"
             />
-            <div className="absolute bottom-28 right-10 flex items-center gap-2 max-w-[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
-              <span className="text-sm tr">{product.title}</span>
+            <div className="absolute bottom-10 right-10 h-12 flex items-center gap-2 max-w-[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
+              <span className="text-sm truncate">{product.title}</span>
               <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
                 {product.price.toLocaleString("pt-BR",
                   {
