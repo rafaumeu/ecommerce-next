@@ -6,9 +6,7 @@ import Link from "next/link";
 
 async function getFeaturedProducts(): Promise<Product[]> {
   const response = await api(`/products/featured`, {
-    next: {
-      revalidate: 60 * 60
-    }
+    cache: "no-store"
   })
   const products = await response.json()
   return products
@@ -25,11 +23,11 @@ export default async function Home() {
           width={920}
           height={920}
           quality={100}
-          className="group-hover:scale-105 startTransition duration-500"
+          className="group-hover:scale-105 transition duration-500"
         />
-        <div className="absolute bottom-28 right-28 flex items-center gap2 max-w[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
+        <div className="absolute bottom-28 right-28 flex items-center gap-2 max-w-[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
           <span className="text-sm truncate">{highLightedProduct.title}</span>
-          <span className="flex h-full itens-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
+          <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
             {highLightedProduct.price.toLocaleString('pt-BR',
               {
                 style: 'currency', 
@@ -55,11 +53,11 @@ export default async function Home() {
               width={920}
               height={920}
               quality={100}
-              className="group-hover:scale-105 startTransition duration-500"
+              className="group-hover:scale-105 transition duration-500"
             />
-            <div className="absolute bottom-28 right-10 flex items-center gap2 max-w[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
+            <div className="absolute bottom-28 right-10 flex items-center gap-2 max-w-[280px] rounded-full border-2 border-zinc-500 bg-black/60 p-1 pl-5">
               <span className="text-sm tr">{product.title}</span>
-              <span className="flex h-full itens-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
+              <span className="flex h-full items-center justify-center rounded-full bg-violet-500 px-4 font-semibold">
                 {product.price.toLocaleString("pt-BR",
                   {
                     style: "currency",
