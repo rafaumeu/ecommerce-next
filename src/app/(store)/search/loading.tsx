@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { Skeleton } from '../../../components/skeleton';
 import { CurrentSearch } from './current-search';
 
-export function SearchContent() {
+function SearchContent() {
 
   return (
     <div className="flex flex-col gap-4">
@@ -18,5 +18,12 @@ export function SearchContent() {
         <Skeleton className="h-[400px]"/>
       </div>
     </div>
+  )
+}
+export default function SearchLoading() {
+  return (
+    <Suspense>
+      <SearchContent />
+    </Suspense>
   )
 }
