@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { Skeleton } from '../../../components/skeleton';
 import { CurrentSearch } from './current-search';
 
-function SearchContent() {
+export function SearchContent() {
 
   return (
     <div className="flex flex-col gap-4">
