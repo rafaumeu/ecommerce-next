@@ -1,0 +1,58 @@
+name: Cypress Tests
+
+on: push
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - uses: actions/cache@v3
+        name: Cache Yarn cache
+        with:
+          path: ~/.yarn/cache
+          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-cache-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - uses: actions/cache@v3
+        name: Cache node_modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Build project
+        run: yarn build
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+        timeout-minutes: 15
+
+      - name: Start application
+        run: |
+          yarn start &
+          echo $! > .pidfile
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+
+      - name: Cypress run
+        run: npx cypress run
+      - name: Stop application
+        if: always()
+        run: |
+          if [ -f .pidfile ]; then
+            kill $(cat .pidfile)
+          fi
