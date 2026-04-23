@@ -25,3 +25,6 @@ jobs:
       - run: npm run lint --if-present
         continue-on-error: true
       - run: npm run build
+        env:
+          APP_URL: http://localhost:3000
+          NEXT_PUBLIC_API_BASE_URL: http://localhost:3000/api
