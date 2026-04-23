@@ -17,6 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html className={`${inter.className}`} lang="pt-br">
+      <head>
+        <script defer src="https://cdn.counter.dev/script.js" data-id="22668af5-0bdf-4cae-937b-83f9594dc79e" data-utcoffset="-3"></script>
+      </head>
       <body
         className="bg-zinc-950 text-zinc-50 antialiased"
       >
