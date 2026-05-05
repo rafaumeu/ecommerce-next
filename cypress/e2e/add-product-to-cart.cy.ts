@@ -8,10 +8,11 @@ describe('add product to cart', () => {
   })
 
   it('should be able to navigate to the product page and add it to the cart', () => {
-    // Use cy.visit instead of click to bypass hydration issues with Next.js <Link>
     cy.get('a[href^="/product"]').first().invoke('attr', 'href').then((href) => {
       cy.visit(href as string)
     })
+    // Wait for client-side fetch to complete and product to render
+    cy.get('h1', { timeout: 10000 }).should('exist')
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
   })
@@ -20,6 +21,7 @@ describe('add product to cart', () => {
     cy.get('a[href^="/product"]').first().invoke('attr', 'href').then((href) => {
       cy.visit(href as string)
     })
+    cy.get('h1', { timeout: 10000 }).should('exist')
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
@@ -31,6 +33,7 @@ describe('add product to cart', () => {
     cy.get('a[href^="/product"]').first().invoke('attr', 'href').then((href) => {
       cy.visit(href as string)
     })
+    cy.get('h1', { timeout: 10000 }).should('exist')
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
   })

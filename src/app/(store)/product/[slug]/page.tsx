@@ -1,27 +1,49 @@
-export const dynamic = "force-dynamic"
+"use client"
+
 import { AddToCartButton } from "@/components/add-to-cart-button";
-import { Product } from "@/data/types/product";
-import { Metadata } from "next";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import data from "@/app/api/products/data.json";
+import type { Product } from "@/data/types/product";
 
 interface ProductProps {
   params: { slug: string };
 }
 
-function getProduct(slug: string): Product {
-  const product = data.products.find((p) => p.slug === slug)
-  if (!product) throw new Error(`Product not found: ${slug}`)
-  return product
-}
+export default function ProductPage({ params }: ProductProps) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export async function generateMetadata({ params }: ProductProps): Promise<Metadata> {
-  const product = getProduct(params.slug)
-  return { title: product.title }
-}
+  useEffect(() => {
+    fetch(`/api/products/${params.slug}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Product not found");
+        return res.json();
+      })
+      .then((data) => {
+        setProduct(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [params.slug]);
 
-export default async function ProductPage({ params }: ProductProps) {
-  const product = getProduct(params.slug)
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[860px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-violet-500" />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="flex items-center justify-center h-[860px]">
+        <p className="text-zinc-400">Produto nao encontrado</p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative grid max-h-[860px] grid-cols-3">
       <div className="col-span-2 overflow-hidden">
