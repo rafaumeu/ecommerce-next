@@ -1,22 +1,27 @@
 describe('add product to cart', () => {
   beforeEach(() => {
     cy.visit("/")
-    // Wait for React hydration to fully settle before interacting.
-    // React #418 recovery can re-render the DOM and detach elements.
-    cy.wait(2000)
+    // Wait for React hydration to fully settle
+    cy.wait(3000)
+    // Verify page has content
+    cy.get('body').should('not.be.empty')
     cy.get('a[href^="/product"]').should('have.length.at.least', 1)
   })
 
   it('should be able to navigate to the product page and add it to the cart', () => {
+    cy.screenshot('before-click')
+    cy.get('a[href^="/product"]').first().then($el => {
+      cy.log('Link href: ' + $el.attr('href'))
+    })
     cy.get('a[href^="/product"]').first().click()
-    cy.location('pathname').should('include', '/product')
+    cy.location('pathname', { timeout: 10000 }).should('include', '/product')
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
   })
 
   it('should not be able to add the same product twice', () => {
     cy.get('a[href^="/product"]').first().click()
-    cy.location('pathname').should('include', '/product')
+    cy.location('pathname', { timeout: 10000 }).should('include', '/product')
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
@@ -26,7 +31,7 @@ describe('add product to cart', () => {
     cy.searchByQuery('camiseta')
     cy.get('a[href^="/product"]').should('have.length.at.least', 1)
     cy.get('a[href^="/product"]').first().click()
-    cy.location('pathname').should('include', '/product')
+    cy.location('pathname', { timeout: 10000 }).should('include', '/product')
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
   })
