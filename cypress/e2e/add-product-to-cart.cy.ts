@@ -1,7 +1,9 @@
 describe('add product to cart', () => {
   beforeEach(() => {
     cy.visit("/")
-    // Wait for React hydration to complete and page to stabilize
+    // Wait for React hydration to fully settle before interacting.
+    // React #418 recovery can re-render the DOM and detach elements.
+    cy.wait(2000)
     cy.get('a[href^="/product"]').should('have.length.at.least', 1)
   })
 
