@@ -21,8 +21,8 @@ jobs:
       - name: Build project
         run: npm run build
         env:
-          APP_URL: http://localhost:3000
-          NEXT_PUBLIC_API_BASE_URL: http://localhost:3000/api
+          APP_URL: ${{ secrets.APP_URL }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
         timeout-minutes: 15
 
       - name: Start application
@@ -30,8 +30,8 @@ jobs:
           npm run start &
           npx wait-on http://localhost:3000 --timeout 30000
         env:
-          APP_URL: http://localhost:3000
-          NEXT_PUBLIC_API_BASE_URL: http://localhost:3000/api
+          APP_URL: ${{ secrets.APP_URL }}
+          NEXT_PUBLIC_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
 
       - name: Cypress run
         run: npx cypress run
