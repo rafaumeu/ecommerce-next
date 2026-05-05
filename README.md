@@ -6,19 +6,19 @@
 
 An e-commerce storefront for developer products, built with Next.js and Stripe.
 
-**[Live Demo →](https://devstorerdz.netlify.app/)**
+<strong><a href="https://devstorerdz.netlify.app/">Live Demo →</a></strong>
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
-[![Stripe](https://img.shields.io/badge/Stripe-Payments-635BFF?style=for-the-badge&logo=stripe)](https://stripe.com/)
-[![Cypress E2E](https://img.shields.io/badge/Cypress-E2E_Tests-17202C?style=for-the-badge&logo=cypress)](https://www.cypress.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
+[<img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js"/>](https://nextjs.org/)
+[<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript"/>](https://www.typescriptlang.org/)
+[<img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=for-the-badge&logo=tailwindcss"/>](https://tailwindcss.com/)
+[<img alt="Stripe" src="https://img.shields.io/badge/Stripe-Payments-635BFF?style=for-the-badge&logo=stripe"/>](https://stripe.com/)
+[<img alt="Cypress E2E" src="https://img.shields.io/badge/Cypress-E2E_Tests-17202C?style=for-the-badge&logo=cypress"/>](https://www.cypress.io/)
+[<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"/>](./LICENSE)
 
 ---
 
 <p align="center">
-  [![Use this template](https://img.shields.io/badge/Use_This_Template-FFCA28?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rafaumeu/ecommerce-next/generate)
+  [<img alt="Use this template" src="https://img.shields.io/badge/Use_This_Template-FFCA28?style=for-the-badge&logo=github&logoColor=white"/>](https://github.com/rafaumeu/ecommerce-next/generate)
 </p>
 
 
