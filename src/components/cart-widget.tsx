@@ -3,7 +3,7 @@ import { useCart } from "@/contexts/cart-context"
 import { ShoppingBag } from "lucide-react"
 
 export function CartWidget() {
-  const { totalItems, toggleCart } = useCart()
+  const { totalItems, toggleCart, mounted } = useCart()
   return (
     <button
       onClick={toggleCart}
@@ -12,7 +12,7 @@ export function CartWidget() {
     >
       <ShoppingBag className="h-4 w-4" />
       <span className="text-sm">
-        Cart ({totalItems})
+        Cart ({mounted ? totalItems : 0})
       </span>
     </button>
   )

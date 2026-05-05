@@ -17,6 +17,7 @@ interface CartContextType {
   toggleCart: () => void
   openCart: () => void
   closeCart: () => void
+  mounted: boolean
 }
 
 const CartContext = createContext({} as CartContextType);
@@ -26,6 +27,7 @@ const CART_STORAGE_KEY = 'devstore-cart';
 export function CartProvider({children}: {children: React.ReactNode}) {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     try {
@@ -34,13 +36,16 @@ export function CartProvider({children}: {children: React.ReactNode}) {
         setCartItems(JSON.parse(stored))
       }
     } catch {}
+    setMounted(true)
   }, [])
 
   useEffect(() => {
-    try {
-      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems))
-    } catch {}
-  }, [cartItems])
+    if (mounted) {
+      try {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems))
+      } catch {}
+    }
+  }, [cartItems, mounted])
 
   const removeFromCart = useCallback((productId: number) => {
     setCartItems(state => state.filter(item => item.productId !== productId))
@@ -95,6 +100,7 @@ export function CartProvider({children}: {children: React.ReactNode}) {
       toggleCart,
       openCart,
       closeCart,
+      mounted,
     }}>
       {children}
     </CartContext.Provider>
