@@ -11,7 +11,6 @@ describe('add product to cart', () => {
     cy.get('a[href^="/product"]').first().invoke('attr', 'href').then((href) => {
       cy.visit(href as string)
     })
-    // Wait for client-side fetch to complete and product to render
     cy.get('h1', { timeout: 10000 }).should('exist')
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
@@ -23,7 +22,11 @@ describe('add product to cart', () => {
     })
     cy.get('h1', { timeout: 10000 }).should('exist')
     cy.contains('Adicionar ao carrinho').click()
-    cy.contains('Adicionar ao carrinho').click()
+    cy.contains('Cart (1)').should('exist')
+    // Close the cart sidebar that opened after adding the product
+    cy.get('body').type('{esc}')
+    // Second click should not increase cart count
+    cy.contains('Adicionar ao carrinho').click({ force: true })
     cy.contains('Cart (1)').should('exist')
   })
 
