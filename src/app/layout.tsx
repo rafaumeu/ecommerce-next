@@ -5,19 +5,22 @@ import "./globals.css";
 import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ["latin"] });
+const BASE_URL = 'https://ecommerce-next-rafaels-projects-62f31870.vercel.app';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: {
     template: '%s | DevStore',
     default: 'DevStore — E-commerce Moderno'
   },
   description: 'E-commerce com pagamentos Stripe, SSR Next.js e design responsivo. Loja virtual com catálogo de produtos e checkout integrado.',
   keywords: ['e-commerce', 'next.js', 'stripe', 'typescript', 'tailwind', 'devstore'],
-  authors: [{ name: 'Rafael Dias Zendron' }],
-  alternates: { canonical: 'https://devstorerdz.netlify.app' },
+  authors: [{ name: 'Rafael Zendron' }],
+  alternates: { canonical: BASE_URL },
   openGraph: {
     title: 'DevStore — E-commerce Moderno',
     description: 'E-commerce com pagamentos Stripe, SSR Next.js e design responsivo.',
-    url: 'https://devstorerdz.netlify.app',
+    url: BASE_URL,
     siteName: 'DevStore',
     locale: 'pt_BR',
     type: 'website',
@@ -38,6 +41,9 @@ export default function RootLayout({
   return (
     <html className={`${inter.className}`} lang="pt-br" suppressHydrationWarning>
       <head>
+        <meta name="author" content="Rafael Zendron" />
+        <link rel="me" href="https://github.com/rafaumeu" />
+        <link rel="me" href="https://portfoliodev-blush-pi.vercel.app" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -46,7 +52,7 @@ export default function RootLayout({
               '@type': 'WebSite',
               name: 'DevStore',
               description: 'E-commerce com pagamentos Stripe e design responsivo',
-              url: 'https://devstorerdz.netlify.app',
+              url: 'https://ecommerce-next-rafaels-projects-62f31870.vercel.app',
             }),
           }}
         />
