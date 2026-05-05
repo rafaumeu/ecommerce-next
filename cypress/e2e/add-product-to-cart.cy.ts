@@ -1,6 +1,8 @@
 describe('add product to cart', () => {
   beforeEach(() => {
     cy.visit("/")
+    // Wait for React hydration to complete and page to stabilize
+    cy.get('a[href^="/product"]').should('have.length.at.least', 1)
   })
 
   it('should be able to navigate to the product page and add it to the cart', () => {
@@ -20,10 +22,10 @@ describe('add product to cart', () => {
 
   it('should be able to search for a product and add it to the cart', () => {
     cy.searchByQuery('camiseta')
+    cy.get('a[href^="/product"]').should('have.length.at.least', 1)
     cy.get('a[href^="/product"]').first().click()
     cy.location('pathname').should('include', '/product')
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
   })
 })
-  
