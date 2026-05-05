@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=FF0080&height=180&section=header&text=DevStore&fontSize=42&fontColor=fff&animation=fadeIn&fontAlignY=35&desc=Modern%20E-commerce%20with%20Next.js%20%26%20Stripe&descSize=18&descAlignY=52"/>
+  <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=FFCA28&height=180&section=header&text=DevStore&fontSize=42&fontColor=fff&animation=fadeIn&fontAlignY=35&desc=Modern%20E-commerce%20with%20Next.js%20%26%20Stripe&descSize=18&descAlignY=52"/>
 </div>
 
 # DevStore
@@ -180,6 +180,6 @@ This project is licensed under the MIT License. See the [LICENSE](./LICENSE) fil
 </p>
 
 <div align="center">
-  <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=FF0080&height=100&section=footer"/>
+  <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=FFCA28&height=100&section=footer"/>
   <br/><sub>Built with ❤️ by <a href="https://github.com/rafaumeu">Rafael Zendron</a></sub>
 </div>
