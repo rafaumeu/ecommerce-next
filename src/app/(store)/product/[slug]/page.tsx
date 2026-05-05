@@ -1,33 +1,27 @@
 export const dynamic = "force-dynamic"
 import { AddToCartButton } from "@/components/add-to-cart-button";
-import { api } from "@/data/api";
 import { Product } from "@/data/types/product";
 import { Metadata } from "next";
 import Image from "next/image";
+import data from "@/app/api/products/data.json";
 
 interface ProductProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
-async function getProduct(slug: string): Promise<Product> {
-  const response = await api(`/products/${slug}`, {
-    cache: "no-store"
-  })
-  const product = await response.json()
+function getProduct(slug: string): Product {
+  const product = data.products.find((p) => p.slug === slug)
+  if (!product) throw new Error(`Product not found: ${slug}`)
   return product
 }
 
 export async function generateMetadata({ params }: ProductProps): Promise<Metadata> {
-  const { slug } = await params
-  const product = await getProduct(slug)
-  return {
-    title: product.title
-  }
+  const product = getProduct(params.slug)
+  return { title: product.title }
 }
 
 export default async function ProductPage({ params }: ProductProps) {
-  const { slug } = await params
-  const product = await getProduct(slug)
+  const product = getProduct(params.slug)
   return (
     <div className="relative grid max-h-[860px] grid-cols-3">
       <div className="col-span-2 overflow-hidden">
