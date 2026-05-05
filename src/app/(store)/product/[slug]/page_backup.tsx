@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic"
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { api } from "@/data/api";
 import { Product } from "@/data/types/product";
