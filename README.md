@@ -17,6 +17,11 @@ An e-commerce storefront for developer products, built with Next.js and Stripe.
 
 ---
 
+<p align="center">
+  [![Use this template](https://img.shields.io/badge/Use_This_Template-FF0080?style=for-the-badge&logo=github&logoColor=white)](https://github.com/rafaumeu/ecommerce-next/generate)
+</p>
+
+
 ## Screenshots
 
 <!-- Add screenshot here -->
