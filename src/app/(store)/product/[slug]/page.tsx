@@ -78,7 +78,7 @@ export default function ProductPage({ params }: ProductProps) {
             })}`}
           </span>
         </div>
-        <AddToCartButton />
+        <AddToCartButton productId={product.id} />
       </div>
     </div>
   )

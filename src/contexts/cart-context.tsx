@@ -55,11 +55,8 @@ export function CartProvider({children}: {children: React.ReactNode}) {
     setCartItems(state => {
       const existing = state.find(item => item.productId === productId)
       if (existing) {
-        return state.map(item =>
-          item.productId === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
+        // Already in cart — do not add again
+        return state
       }
       return [...state, { productId, quantity: 1 }]
     })

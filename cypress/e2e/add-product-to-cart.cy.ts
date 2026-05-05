@@ -21,12 +21,16 @@ describe('add product to cart', () => {
       cy.visit(href as string)
     })
     cy.get('h1', { timeout: 10000 }).should('exist')
+    // First click adds to cart and opens sidebar
     cy.contains('Adicionar ao carrinho').click()
     cy.contains('Cart (1)').should('exist')
-    // Close the cart sidebar that opened after adding the product
+    // Close cart sidebar
     cy.get('body').type('{esc}')
-    // Second click should not increase cart count
+    // Wait for sidebar to close
+    cy.wait(500)
+    // Second click — should be blocked (duplicate)
     cy.contains('Adicionar ao carrinho').click({ force: true })
+    // Cart count should still be 1
     cy.contains('Cart (1)').should('exist')
   })
 
