@@ -1,54 +1,57 @@
-export const dynamic = "force-dynamic"
+"use client"
+
 import { AddToCartButton } from "@/components/add-to-cart-button";
-import { api } from "@/data/api";
-import { Product } from "@/data/types/product";
-import { Metadata } from "next";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import type { Product } from "@/data/types/product";
 
 interface ProductProps {
-  params: {
-    slug: string;
-  };
-}
-async function getProduct(slug: string): Promise<Product> {
-  const response = await api(`/products/${slug}`, {
-    cache: "no-store"
-  })
-  const product = await response.json()
-  return product
+  params: { slug: string };
 }
 
-export async function generateMetadata(
-  {
-    params
-  }: ProductProps): Promise<Metadata> {
-  const product = await getProduct(params.slug)
-  return {
-    title: product.title
-  }  
-}
+export default function ProductPage({ params }: ProductProps) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export async function generateStaticParams() {
-  const response = await api('/products/featured')
-  const product: Product[] = await response.json()
+  useEffect(() => {
+    fetch(`/api/products/${params.slug}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Product not found");
+        return res.json();
+      })
+      .then((data) => {
+        setProduct(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [params.slug]);
 
-  return product.map((product) => {
-    return {
-      slug: product.slug
-    }
-  })
-}
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[860px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-violet-500" />
+      </div>
+    );
+  }
 
-export default async function ProductPage({params}: ProductProps) {
-  const product = await getProduct(params.slug)
+  if (!product) {
+    return (
+      <div className="flex items-center justify-center h-[860px]">
+        <p className="text-zinc-400">Produto nao encontrado</p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative grid max-h-[860px] grid-cols-3">
       <div className="col-span-2 overflow-hidden">
         <Image
           src={product.image}
           alt=""
-          width={1000} 
-          height={1000} 
+          width={1000}
+          height={1000}
           quality={100}
         />
       </div>
@@ -65,24 +68,15 @@ export default async function ProductPage({params}: ProductProps) {
               style: 'currency',
               currency: 'BRL',
               minimumFractionDigits: 0,
-              maximumFractionDigits: 0
+              maximumFractionDigits: 0,
             })}
           </span>
           <span className="text-sm text-zinc-400">
-            Em 12X s/juros de R$ {(product.price / 12).toLocaleString('pt-BR', {
-              style: 'currency',
-              currency: 'BRL'
-            })}
+            ou 12x de {`R$ ${product.price.toLocaleString('pt-BR', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}`}
           </span>
-        </div>
-        <div className="mt-8 space-y-4">
-          <span className="block font-semibold">Tamanhos</span>
-          <div className="flex gap-2">
-            <button type="button" className="flex h-9 w-14 items-center justify-center rounded-full border-zinc-700 bg-zinc-800 text-sm font-semibold">P</button>
-            <button type="button" className="flex h-9 w-14 items-center justify-center rounded-full border-zinc-700 bg-zinc-800 text-sm font-semibold">M</button>
-            <button type="button" className="flex h-9 w-14 items-center justify-center rounded-full border-zinc-700 bg-zinc-800 text-sm font-semibold">G</button>
-            <button type="button" className="flex h-9 w-14 items-center justify-center rounded-full border-zinc-700 bg-zinc-800 text-sm font-semibold">GG</button>
-          </div>
         </div>
         <AddToCartButton productId={product.id} />
       </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import {Inter} from "next/font/google";
+import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Analytics } from '@vercel/analytics/react';
 
@@ -35,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={`${inter.className}`} lang="pt-br">
+    <html className={`${inter.className}`} lang="pt-br" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -49,13 +50,19 @@ export default function RootLayout({
             }),
           }}
         />
-        <script defer src="https://cdn.counter.dev/script.js" data-id="22668af5-0bdf-4cae-937b-83f9594dc79e" data-utcoffset="-3"></script>
       </head>
       <body
         className="bg-zinc-950 text-zinc-50 antialiased"
+        suppressHydrationWarning
       >
         {children}
         <Analytics />
+        <Script
+          src="https://cdn.counter.dev/script.js"
+          data-id="22668af5-0bdf-4cae-937b-83f9594dc79e"
+          data-utcoffset="-3"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );
