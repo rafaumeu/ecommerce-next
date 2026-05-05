@@ -61,7 +61,7 @@ export default function RootLayout({
           src="https://cdn.counter.dev/script.js"
           data-id="22668af5-0bdf-4cae-937b-83f9594dc79e"
           data-utcoffset="-3"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>
