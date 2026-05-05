@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import { Header } from '../../components/header';
+import { CartSidebar } from '../../components/cart-sidebar';
 import { CartProvider } from '@/contexts/cart-context';
+
 export default function StoreLayout({children}: {children: ReactNode}){
 
   return (
@@ -9,6 +11,7 @@ export default function StoreLayout({children}: {children: ReactNode}){
         <Header />
         {children}
       </div>
+      <CartSidebar />
     </CartProvider>
   )
 }

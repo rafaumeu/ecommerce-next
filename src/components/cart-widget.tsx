@@ -2,16 +2,18 @@
 import { useCart } from "@/contexts/cart-context"
 import { ShoppingBag } from "lucide-react"
 
-export interface CartWidgetProps {
-  quantity?: number
-}
-
-export function CartWidget({quantity}: CartWidgetProps) {
-  const {items} = useCart()
+export function CartWidget() {
+  const { totalItems, toggleCart } = useCart()
   return (
-    <div className="flex items-center gap 2">
+    <button
+      onClick={toggleCart}
+      className="relative flex items-center gap-2 transition-colors hover:text-emerald-400"
+      aria-label="Open cart"
+    >
       <ShoppingBag className="h-4 w-4" />
-      <span className="text-sm">Cart ({items.length})</span>
-    </div>
+      <span className="text-sm">
+        Cart ({totalItems})
+      </span>
+    </button>
   )
 }
