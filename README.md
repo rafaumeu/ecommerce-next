@@ -8,6 +8,10 @@ An e-commerce storefront for developer products, built with Next.js and Stripe.
 
 <strong><a href="https://devstorerdz.netlify.app/">Live Demo →</a></strong>
 
+<div align="center">
+  <img src="./docs/screenshot.png" alt="DevStore Screenshot" width="100%" />
+</div>
+
 [<img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js"/>](https://nextjs.org/)
 [<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript"/>](https://www.typescriptlang.org/)
 [<img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=for-the-badge&logo=tailwindcss"/>](https://tailwindcss.com/)
