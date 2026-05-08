@@ -2,7 +2,7 @@
   <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=FFCA28&height=180&section=header&text=DevStore&fontSize=42&fontColor=fff&animation=fadeIn&fontAlignY=35&desc=Modern%20E-commerce%20with%20Next.js%20%20and%20%20Stripe&descSize=18&descAlignY=52"/>
 </div>
 
-# DevStore
+## Overview
 
 <div align="center">
 
