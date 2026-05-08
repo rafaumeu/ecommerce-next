@@ -6,54 +6,31 @@
 
 <div align="center">
 
-[<img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js"/>](https://nextjs.org/)
-[<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript"/>](https://www.typescriptlang.org/)
-[<img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=for-the-badge&logo=tailwindcss"/>](https://tailwindcss.com/)
-[<img alt="Stripe" src="https://img.shields.io/badge/Stripe-Payments-635BFF?style=for-the-badge&logo=stripe"/>](https://stripe.com/)
-[<img alt="Docker" src="https://img.shields.io/badge/Docker-ready-2496ED.svg"/>](https://docker.com/)
+| | | | | |
+|:---:|:---:|:---:|:---:|:---:|
+| [<img alt="Next.js" src="https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=next.js"/>](https://nextjs.org/) | [<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript"/>](https://www.typescriptlang.org/) | [<img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss"/>](https://tailwindcss.com/) | [<img alt="Stripe" src="https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe"/>](https://stripe.com/) | [<img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker"/>](https://docker.com/) |
 
 </div>
 
-
 An e-commerce storefront for developer products, built with Next.js and Stripe.
 
-<strong><a href="https://devstorerdz.netlify.app/">Live Demo →</a></strong>
+<strong><a href="https://devstorerdz.netlify.app/">Live Demo</a></strong>
 
 <div align="center">
   <img src="./docs/screenshot.png" alt="DevStore Screenshot" width="100%" />
 </div>
 
-[<img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js"/>](https://nextjs.org/)
-[<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript"/>](https://www.typescriptlang.org/)
-[<img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=for-the-badge&logo=tailwindcss"/>](https://tailwindcss.com/)
-[<img alt="Stripe" src="https://img.shields.io/badge/Stripe-Payments-635BFF?style=for-the-badge&logo=stripe"/>](https://stripe.com/)
-[<img alt="Cypress E2E" src="https://img.shields.io/badge/Cypress-E2E_Tests-17202C?style=for-the-badge&logo=cypress"/>](https://www.cypress.io/)
-[<img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge"/>](./LICENSE)
-
----
-
-<p align="center">
-
-  [<img alt="Use this template" src="https://img.shields.io/badge/Use_This_Template-FFCA28?style=for-the-badge&logo=github&logoColor=white"/>](https://github.com/rafaumeu/ecommerce-next/generate)
-
-</p>
-
-
-## Screenshots
-
-<!-- Add screenshot here -->
-
 ---
 
 ## Features
 
-- 🛒 **Shopping cart** — add, remove, and update items with persistent state
-- 🔍 **Product search** — real-time search with server-side filtering
-- 💳 **Stripe checkout** — secure payment processing
-- 📱 **Responsive layout** — works on mobile, tablet, and desktop
-- 🖼️ **Optimized images** — Next.js Image component with lazy loading
-- ⚡ **App Router** — Next.js 15 with React Server Components
-- 🧪 **E2E tests** — Cypress test suite running on CI
+- Shopping cart — add, remove, and update items with persistent state
+- Product search — real-time search with server-side filtering
+- Stripe checkout — secure payment processing
+- Responsive layout — works on mobile, tablet, and desktop
+- Optimized images — Next.js Image component with lazy loading
+- App Router — Next.js 15 with React Server Components
+- E2E tests — Cypress test suite running on CI
 
 ---
 
@@ -200,3 +177,7 @@ This project is licensed under the MIT License. See the [LICENSE](./LICENSE) fil
   <img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=FFCA28&height=100&section=footer"/>
   <br/><sub>Built with ❤️ by <a href="https://github.com/rafaumeu">Rafael Zendron</a></sub>
 </div>
+
+<p align="center">
+  <a href="https://github.com/rafaumeu/ecommerce-next/generate"><img src="https://img.shields.io/badge/Use_This_Template-FFCA28?style=for-the-badge&logo=github&logoColor=white" alt="Use this template"/></a>
+</p>
