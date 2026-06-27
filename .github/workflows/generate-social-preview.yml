@@ -28,12 +28,15 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install deps & Generate
+      - name: Install resvg
+        run: npm install @resvg/resvg-js@^2.6.0 --no-save --no-package-lock
+
+      - name: Generate OG Image
         env:
           REPO_NAME: ${{ github.event.repository.name }}
+        shell: bash
         run: |
-          npm install @resvg/resvg-js@^2.6.0 --no-save --no-package-lock
-          node -e "
+          node << 'NODESCRIPT'
           const fs = require('fs');
           const path = require('path');
           const { Resvg } = require('@resvg/resvg-js');
@@ -48,15 +51,15 @@ jobs:
           const tl=c.title.length,fs2=tl<=12?64:tl<=20?52:tl<=30?42:34,tm=Math.floor(900/(fs2*0.6)),tlines=wrap(esc(c.title),tm),ty=Math.max(300-(tlines.length-1)*(fs2+8),260);
           const slines=c.subtitle?wrap(esc(c.subtitle),45):[],sy=ty+tlines.length*(fs2+8)+20;
           const tagsy=sy+slines.length*40+30,ts=160,ttw=c.tags.length*ts,tstart=Math.max((1200-ttw)/2,100);
-          const tsvg=c.tags.map((t,i)=>{const x=tstart+i*ts,pw=Math.min(t.length*10+30,140);return '<rect x=\"'+x+'\" y=\"'+tagsy+'\" width=\"'+pw+'\" height=\"32\" rx=\"16\" fill=\"rgba('+ar+',0.1)\" stroke=\"rgba('+ar+',0.3)\" stroke-width=\"1\"/><text x=\"'+(x+pw/2)+'\" y=\"'+(tagsy+22)+'\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"16\" fill=\"'+ac+'\">'+esc(t)+'</text>'}).join('');
+          const tsvg=c.tags.map((t,i)=>{const x=tstart+i*ts,pw=Math.min(t.length*10+30,140);return '<rect x="'+x+'" y="'+tagsy+'" width="'+pw+'" height="32" rx="16" fill="rgba('+ar+',0.1)" stroke="rgba('+ar+',0.3)" stroke-width="1"/><text x="'+(x+pw/2)+'" y="'+(tagsy+22)+'" text-anchor="middle" font-family="DejaVu Sans,system-ui,sans-serif" font-size="16" fill="'+ac+'">'+esc(t)+'</text>'}).join('');
           const sepY=tagsy+52,auY=sepY+40;
-          const svg='<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg width=\"1200\" height=\"630\" viewBox=\"0 0 1200 630\" xmlns=\"http://www.w3.org/2000/svg\"><defs><linearGradient id=\"tB\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\"'+ac+'\" stop-opacity=\"1\"/><stop offset=\"100%\" stop-color=\"'+ac+'\" stop-opacity=\"0.3\"/></linearGradient><linearGradient id=\"bB\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\"'+ac+'\" stop-opacity=\"0.3\"/><stop offset=\"100%\" stop-color=\"'+ac+'\" stop-opacity=\"1\"/></linearGradient></defs><rect width=\"1200\" height=\"630\" fill=\"'+bg+'\"/><rect width=\"1200\" height=\"6\" fill=\"url(#tB)\"/><rect y=\"624\" width=\"1200\" height=\"6\" fill=\"url(#bB)\"/><rect x=\"150\" y=\"80\" width=\"900\" height=\"470\" rx=\"20\" fill=\"'+cb+'\" stroke=\"'+bd+'\" stroke-width=\"1\"/><text x=\"600\" y=\"180\" text-anchor=\"middle\" font-size=\"64\">'+c.emoji+'</text>'+tlines.map((l,i)=>'<text x=\"600\" y=\"'+(ty+i*(fs2+8))+'\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"'+fs2+'\" font-weight=\"bold\" fill=\"'+fg+'\">'+l+'</text>').join('')+slines.map((l,i)=>'<text x=\"600\" y=\"'+(sy+i*40)+'\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"26\" fill=\"'+mt+'\">'+l+'</text>').join('')+tsvg+'<rect x=\"560\" y=\"'+sepY+'\" width=\"80\" height=\"3\" rx=\"2\" fill=\"'+ac+'\" opacity=\"0.6\"/><circle cx=\"565\" cy=\"'+(auY+4)+'\" r=\"10\" fill=\"'+ac+'\" opacity=\"0.8\"/><text x=\"585\" y=\"'+(auY+10)+'\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"20\" fill=\"'+mt+'\">by '+esc(c.author)+'</text></svg>';
+          const svg='<?xml version="1.0" encoding="UTF-8"?><svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tB" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="'+ac+'" stop-opacity="1"/><stop offset="100%" stop-color="'+ac+'" stop-opacity="0.3"/></linearGradient><linearGradient id="bB" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="'+ac+'" stop-opacity="0.3"/><stop offset="100%" stop-color="'+ac+'" stop-opacity="1"/></linearGradient></defs><rect width="1200" height="630" fill="'+bg+'"/><rect width="1200" height="6" fill="url(#tB)"/><rect y="624" width="1200" height="6" fill="url(#bB)"/><rect x="150" y="80" width="900" height="470" rx="20" fill="'+cb+'" stroke="'+bd+'" stroke-width="1"/><text x="600" y="180" text-anchor="middle" font-size="64">'+c.emoji+'</text>'+tlines.map((l,i)=>'<text x="600" y="'+(ty+i*(fs2+8))+'" text-anchor="middle" font-family="DejaVu Sans,system-ui,sans-serif" font-size="'+fs2+'" font-weight="bold" fill="'+fg+'">'+l+'</text>').join('')+slines.map((l,i)=>'<text x="600" y="'+(sy+i*40)+'" text-anchor="middle" font-family="DejaVu Sans,system-ui,sans-serif" font-size="26" fill="'+mt+'">'+l+'</text>').join('')+tsvg+'<rect x="560" y="'+sepY+'" width="80" height="3" rx="2" fill="'+ac+'" opacity="0.6"/><circle cx="565" cy="'+(auY+4)+'" r="10" fill="'+ac+'" opacity="0.8"/><text x="585" y="'+(auY+10)+'" font-family="DejaVu Sans,system-ui,sans-serif" font-size="20" fill="'+mt+'">by '+esc(c.author)+'</text></svg>';
           const resvg=new Resvg(svg,{background:bg,fitTo:{mode:'width',value:1200}});
           const png=resvg.render().asPng();
           fs.writeFileSync('social-preview.png',png);
           fs.writeFileSync('og-image.png',png);
           console.log('Generated social-preview.png ('+Math.round(png.length/1024)+'KB)');
-          "
+          NODESCRIPT
 
       - name: Commit & Push
         run: |
