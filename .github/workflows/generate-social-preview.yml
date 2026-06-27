@@ -32,8 +32,8 @@ jobs:
         run: |
           mkdir -p .og-tmp
           cd .og-tmp
-          npm init -y 2>/dev/null
-          npm install @resvg/resvg-js@^2.6.0 2>/dev/null
+          npm init -y
+          npm install @resvg/resvg-js@^2.6.0
           cd ..
 
       - name: Generate OG Image
