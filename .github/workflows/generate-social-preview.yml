@@ -30,8 +30,8 @@ jobs:
 
       - name: Install resvg (isolated)
         run: |
-          mkdir -p .og-tmp
-          cd .og-tmp
+          mkdir -p og-tmp
+          cd og-tmp
           npm init -y
           npm install @resvg/resvg-js@^2.6.0
           cd ..
@@ -39,7 +39,7 @@ jobs:
       - name: Generate OG Image
         env:
           REPO_NAME: ${{ github.event.repository.name }}
-          NODE_PATH: .og-tmp/node_modules
+          NODE_PATH: og-tmp/node_modules
         shell: bash
         run: |
           node << 'NODESCRIPT'
@@ -69,7 +69,7 @@ jobs:
 
       - name: Commit & Push
         run: |
-          rm -rf .og-tmp
+          rm -rf og-tmp
           if git diff --quiet social-preview.png og-image.png 2>/dev/null; then
             echo "No changes to social preview images"
           else
