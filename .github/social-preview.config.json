@@ -1,0 +1,13 @@
+{
+  "title": "DevStore",
+  "subtitle": "Next.js SSR e-commerce with Stripe",
+  "accent": "#F39C12",
+  "darkMode": true,
+  "emoji": "\ud83d\uded2",
+  "tags": [
+    "nextjs",
+    "stripe",
+    "ecommerce"
+  ],
+  "author": "Rafael Zendron"
+}
