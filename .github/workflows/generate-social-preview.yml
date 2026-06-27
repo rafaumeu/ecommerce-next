@@ -59,7 +59,8 @@ jobs:
             }
           }
           PKJSON
-          cd .og-gen && npm install 2>/dev/null
+          cd .og-gen && npm install 2>/dev/null && cd ..
+          export NODE_PATH=.og-gen/node_modules
 
           # Generate the OG image using SVG + resvg (no satori dependency)
           node << 'SCRIPT'
