@@ -32,10 +32,31 @@ jobs:
         env:
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          npm init -y --silent 2>/dev/null
-          npm install @resvg/resvg-js@^2.6.0 --save --silent
-          curl -sL https://raw.githubusercontent.com/rafaumeu/social-preview-generator/main/scripts/generate-og-gh.mjs -o generate-og.mjs
-          node generate-og.mjs
+          npm install @resvg/resvg-js@^2.6.0 --no-save --no-package-lock
+          node -e "
+          const fs = require('fs');
+          const path = require('path');
+          const { Resvg } = require('@resvg/resvg-js');
+          const repoName = process.env.REPO_NAME || path.basename(process.cwd());
+          const cp = '.github/social-preview.config.json';
+          let c = {title:repoName,subtitle:'',accent:'#6C5CE7',darkMode:true,emoji:'⚡',author:'Rafael Zendron',tags:[]};
+          if(fs.existsSync(cp)){try{Object.assign(c,JSON.parse(fs.readFileSync(cp,'utf8')))}catch(e){}}
+          const bg=c.darkMode?'#0D1117':'#FFFFFF',fg=c.darkMode?'#E6EDF3':'#1F2328',mt=c.darkMode?'#8B949E':'#656D76',bd=c.darkMode?'#30363D':'#D0D7DE',cb=c.darkMode?'#161B22':'#F6F8FA',ac=c.accent||'#6C5CE7';
+          const hx=ac.replace('#',''),ar=parseInt(hx.substring(0,2),16)+','+parseInt(hx.substring(2,4),16)+','+parseInt(hx.substring(4,6),16);
+          const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');
+          const wrap=(t,m)=>{const w=t.split(' '),l=[];let n='';for(const x of w){if(n.length+x.length+1>m&&n){l.push(n.trim());n=x}else{n+=(n?' ':'')+x}}if(n.trim())l.push(n.trim());return l};
+          const tl=c.title.length,fs2=tl<=12?64:tl<=20?52:tl<=30?42:34,tm=Math.floor(900/(fs2*0.6)),tlines=wrap(esc(c.title),tm),ty=Math.max(300-(tlines.length-1)*(fs2+8),260);
+          const slines=c.subtitle?wrap(esc(c.subtitle),45):[],sy=ty+tlines.length*(fs2+8)+20;
+          const tagsy=sy+slines.length*40+30,ts=160,ttw=c.tags.length*ts,tstart=Math.max((1200-ttw)/2,100);
+          const tsvg=c.tags.map((t,i)=>{const x=tstart+i*ts,pw=Math.min(t.length*10+30,140);return '<rect x=\"'+x+'\" y=\"'+tagsy+'\" width=\"'+pw+'\" height=\"32\" rx=\"16\" fill=\"rgba('+ar+',0.1)\" stroke=\"rgba('+ar+',0.3)\" stroke-width=\"1\"/><text x=\"'+(x+pw/2)+'\" y=\"'+(tagsy+22)+'\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"16\" fill=\"'+ac+'\">'+esc(t)+'</text>'}).join('');
+          const sepY=tagsy+52,auY=sepY+40;
+          const svg='<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg width=\"1200\" height=\"630\" viewBox=\"0 0 1200 630\" xmlns=\"http://www.w3.org/2000/svg\"><defs><linearGradient id=\"tB\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\"'+ac+'\" stop-opacity=\"1\"/><stop offset=\"100%\" stop-color=\"'+ac+'\" stop-opacity=\"0.3\"/></linearGradient><linearGradient id=\"bB\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\"'+ac+'\" stop-opacity=\"0.3\"/><stop offset=\"100%\" stop-color=\"'+ac+'\" stop-opacity=\"1\"/></linearGradient></defs><rect width=\"1200\" height=\"630\" fill=\"'+bg+'\"/><rect width=\"1200\" height=\"6\" fill=\"url(#tB)\"/><rect y=\"624\" width=\"1200\" height=\"6\" fill=\"url(#bB)\"/><rect x=\"150\" y=\"80\" width=\"900\" height=\"470\" rx=\"20\" fill=\"'+cb+'\" stroke=\"'+bd+'\" stroke-width=\"1\"/><text x=\"600\" y=\"180\" text-anchor=\"middle\" font-size=\"64\">'+c.emoji+'</text>'+tlines.map((l,i)=>'<text x=\"600\" y=\"'+(ty+i*(fs2+8))+'\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"'+fs2+'\" font-weight=\"bold\" fill=\"'+fg+'\">'+l+'</text>').join('')+slines.map((l,i)=>'<text x=\"600\" y=\"'+(sy+i*40)+'\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"26\" fill=\"'+mt+'\">'+l+'</text>').join('')+tsvg+'<rect x=\"560\" y=\"'+sepY+'\" width=\"80\" height=\"3\" rx=\"2\" fill=\"'+ac+'\" opacity=\"0.6\"/><circle cx=\"565\" cy=\"'+(auY+4)+'\" r=\"10\" fill=\"'+ac+'\" opacity=\"0.8\"/><text x=\"585\" y=\"'+(auY+10)+'\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"20\" fill=\"'+mt+'\">by '+esc(c.author)+'</text></svg>';
+          const resvg=new Resvg(svg,{background:bg,fitTo:{mode:'width',value:1200}});
+          const png=resvg.render().asPng();
+          fs.writeFileSync('social-preview.png',png);
+          fs.writeFileSync('og-image.png',png);
+          console.log('Generated social-preview.png ('+Math.round(png.length/1024)+'KB)');
+          "
 
       - name: Commit & Push
         run: |
