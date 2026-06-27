@@ -28,19 +28,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Setup OG Generator
-        run: |
-          mkdir -p .og-gen
-          curl -sL https://raw.githubusercontent.com/rafaumeu/social-preview-generator/main/scripts/generate-og-gh.mjs -o .og-gen/gen.mjs
-          cd .og-gen
-          npm init -y --silent 2>/dev/null
-          npm install @resvg/resvg-js@^2.6.0 --save --silent 2>/dev/null
-          cd ..
-
-      - name: Generate OG Image
+      - name: Install deps & Generate
         env:
           REPO_NAME: ${{ github.event.repository.name }}
-        run: node .og-gen/gen.mjs
+        run: |
+          npm init -y --silent 2>/dev/null
+          npm install @resvg/resvg-js@^2.6.0 --save --silent
+          curl -sL https://raw.githubusercontent.com/rafaumeu/social-preview-generator/main/scripts/generate-og-gh.mjs -o generate-og.mjs
+          node generate-og.mjs
 
       - name: Commit & Push
         run: |
