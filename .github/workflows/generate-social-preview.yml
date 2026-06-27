@@ -1,23 +1,4 @@
-# Social Preview Generator - SquadOps Style
-# Reusable workflow that generates OG images with personality for any repo.
-#
-# HOW TO USE:
-# 1. Copy .github/workflows/generate-social-preview.yml to your repo
-# 2. Create .github/social-preview.config.json (see .github/social-preview.config.example.json)
-# 3. Push to main - the workflow triggers automatically
-#
-# CONFIG FORMAT (.github/social-preview.config.json):
-# {
-#   "title": "Repo Name",
-#   "subtitle": "Short description",
-#   "accent": "#6C5CE7",
-#   "darkMode": true,
-#   "emoji": "🚀",
-#   "author": "Your Name",
-#   "tags": ["tag1", "tag2"]
-# }
-
-name: Generate Social Preview
+name: Generate Social Preview (OG Image)
 
 on:
   push:
@@ -25,6 +6,7 @@ on:
     paths:
       - '.github/social-preview.config.json'
       - '.github/workflows/generate-social-preview.yml'
+      - 'src/**'
       - 'package.json'
       - 'README.md'
   schedule:
@@ -46,143 +28,50 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Generate OG Image (SVG + resvg)
-        run: |
-          mkdir -p .og-gen
-          cat > .og-gen/package.json << 'PKGJSON'
-          {
-            "name": "og-gen",
-            "private": true,
-            "type": "module",
-            "dependencies": {
-              "@resvg/resvg-js": "^2.6.0"
-            }
-          }
-          PKJSON
-          cd .og-gen && npm install 2>/dev/null && cd ..
-          export NODE_PATH=.og-gen/node_modules
-
-          # Generate the OG image using SVG + resvg (no satori dependency)
-          node << 'SCRIPT'
-          import { readFileSync, writeFileSync, existsSync } from 'fs';
-          import { Resvg } from '@resvg/resvg-js';
-
-          // Load config
-          let config = {
-            title: process.env.GITHUB_REPOSITORY?.split('/')[1] || 'Project',
-            subtitle: '',
-            accent: '#6C5CE7',
-            darkMode: true,
-            emoji: '⚡',
-            author: 'Rafael Zendron',
-            tags: []
-          };
-
-          if (existsSync('.github/social-preview.config.json')) {
-            const raw = readFileSync('.github/social-preview.config.json', 'utf8');
-            config = { ...config, ...JSON.parse(raw) };
-          }
-
-          // Colors
-          const bg = config.darkMode ? '#0D1117' : '#FFFFFF';
-          const fg = config.darkMode ? '#E6EDF3' : '#1F2328';
-          const muted = config.darkMode ? '#8B949E' : '#656D76';
-          const border = config.darkMode ? '#30363D' : '#D0D7DE';
-          const cardBg = config.darkMode ? '#161B22' : '#F6F8FA';
-          const accent = config.accent || '#6C5CE7';
-
-          // Parse accent for opacity variants
-          const hex = accent.replace('#', '');
-          const r = parseInt(hex.substring(0, 2), 16);
-          const g = parseInt(hex.substring(2, 4), 16);
-          const b = parseInt(hex.substring(4, 6), 16);
-          const accentRGB = `${r},${g},${b}`;
-
-          // Escape XML
-          function esc(s) {
-            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-          }
-
-          // Text wrapping
-          function wrapText(text, maxChars) {
-            const words = text.split(' ');
-            const lines = [];
-            let line = '';
-            for (const w of words) {
-              if (line.length + w.length + 1 > maxChars && line) {
-                lines.push(line.trim());
-                line = w;
-              } else {
-                line += (line ? ' ' : '') + w;
-              }
-            }
-            if (line.trim()) lines.push(line.trim());
-            return lines;
-          }
-
-          // Title sizing
-          function titleFontSize(text) {
-            if (text.length <= 12) return 64;
-            if (text.length <= 20) return 52;
-            if (text.length <= 30) return 42;
-            return 34;
-          }
-
-          const tFS = titleFontSize(config.title);
-          const tMaxChars = Math.floor(900 / (tFS * 0.6));
-          const titleLines = wrapText(esc(config.title), tMaxChars);
-          const titleYStart = Math.max(300 - (titleLines.length - 1) * (tFS + 8), 260);
-
-          const subtitleLines = config.subtitle ? wrapText(esc(config.subtitle), 45) : [];
-          const subtitleYStart = titleYStart + titleLines.length * (tFS + 8) + 20;
-          const tagsY = subtitleYStart + subtitleLines.length * 40 + 30;
-
-          const tagSpacing = 160;
-          const tagsTotalWidth = config.tags.length * tagSpacing;
-          const tagsXStart = Math.max((1200 - tagsTotalWidth) / 2, 100);
-
-          const tagsSVG = config.tags.map((tag, i) => {
-            const x = tagsXStart + i * tagSpacing;
-            const pw = Math.min(tag.length * 10 + 30, 140);
-            return `<rect x="${x}" y="${tagsY}" width="${pw}" height="32" rx="16" fill="rgba(${accentRGB},0.1)" stroke="rgba(${accentRGB},0.3)" stroke-width="1"/>
-                     <text x="${x + pw/2}" y="${tagsY + 22}" text-anchor="middle" font-family="DejaVu Sans,system-ui,sans-serif" font-size="16" fill="${accent}">${esc(tag)}</text>`;
-          }).join('\n    ');
-
-          const sepY = tagsY + 52;
-          const authY = sepY + 40;
-
-          const svg = `<?xml version="1.0" encoding="UTF-8"?>
-          <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="topBar" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="${accent}" stop-opacity="1"/>
-                <stop offset="100%" stop-color="${accent}" stop-opacity="0.3"/>
-              </linearGradient>
-              <linearGradient id="bottomBar" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="${accent}" stop-opacity="0.3"/>
-                <stop offset="100%" stop-color="${accent}" stop-opacity="1"/>
-              </linearGradient>
-            </defs>
-            <rect width="1200" height="630" fill="${bg}"/>
-            <rect width="1200" height="6" fill="url(#topBar)"/>
-            <rect y="624" width="1200" height="6" fill="url(#bottomBar)"/>
-            <rect x="150" y="80" width="900" height="470" rx="20" fill="${cardBg}" stroke="${border}" stroke-width="1"/>
-            <text x="600" y="180" text-anchor="middle" font-size="64">${config.emoji}</text>
-            ${titleLines.map((l, i) => `<text x="600" y="${titleYStart + i * (tFS + 8)}" text-anchor="middle" font-family="DejaVu Sans,system-ui,sans-serif" font-size="${tFS}" font-weight="bold" fill="${fg}">${l}</text>`).join('\n    ')}
-            ${subtitleLines.map((l, i) => `<text x="600" y="${subtitleYStart + i * 40}" text-anchor="middle" font-family="DejaVu Sans,system-ui,sans-serif" font-size="26" fill="${muted}">${l}</text>`).join('\n    ')}
-            ${tagsSVG}
-            <rect x="560" y="${sepY}" width="80" height="3" rx="2" fill="${accent}" opacity="0.6"/>
-            <circle cx="565" cy="${authY + 4}" r="10" fill="${accent}" opacity="0.8"/>
-            <text x="585" y="${authY + 10}" font-family="DejaVu Sans,system-ui,sans-serif" font-size="20" fill="${muted}">by ${esc(config.author)}</text>
-          </svg>`;
-
-          const resvg = new Resvg(svg, { background: bg, fitTo: { mode: 'width', value: 1200 } });
-          const png = resvg.render().asPng();
-          writeFileSync('social-preview.png', png);
-          console.log(`Generated social-preview.png (${(png.length / 1024).toFixed(1)} KB, ${config.title})`);
-          writeFileSync('og-image.png', png);
-          console.log('Generated og-image.png');
-          SCRIPT
+      - name: Generate OG Image
+        shell: bash
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: >
+          npm init -y --silent 2>/dev/null &&
+          npm install @resvg/resvg-js@^2.6.0 --save --silent 2>/dev/null &&
+          node -e '
+          const fs = require("fs");
+          const { Resvg } = require("@resvg/resvg-js");
+          const repo = process.env.REPO_NAME || "Project";
+          let cfg = {title:repo,subtitle:"",accent:"#6C5CE7",darkMode:true,emoji:"⚡",author:"Rafael Zendron",tags:[]};
+          try { Object.assign(cfg, JSON.parse(fs.readFileSync(".github/social-preview.config.json","utf8"))); } catch(e) {}
+          const bg=cfg.darkMode?"#0D1117":"#FFFFFF",
+            fg=cfg.darkMode?"#E6EDF3":"#1F2328",
+            mt=cfg.darkMode?"#8B949E":"#656D76",
+            bd=cfg.darkMode?"#30363D":"#D0D7DE",
+            cb=cfg.darkMode?"#161B22":"#F6F8FA",
+            ac=cfg.accent||"#6C5CE7";
+          const hx=ac.replace("#",""),
+            rv=parseInt(hx.substring(0,2),16),
+            gv=parseInt(hx.substring(2,4),16),
+            bv=parseInt(hx.substring(4,6),16),
+            ar=rv+","+gv+","+bv;
+          const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+          const wrap=(t,m)=>{const w=t.split(" "),l=[];let ln="";for(const c of w){if(ln.length+c.length+1>m&&ln){l.push(ln.trim());ln=c}else{ln+=(ln?" ":"")+c}}if(ln.trim())l.push(ln.trim());return l};
+          const tFS=cfg.title.length<=12?64:cfg.title.length<=20?52:cfg.title.length<=30?42:34;
+          const tM=Math.floor(900/(tFS*0.6)),
+            tl=wrap(esc(cfg.title),tM),
+            ty=Math.max(300-(tl.length-1)*(tFS+8),260);
+          const sl=cfg.subtitle?wrap(esc(cfg.subtitle),45):[],
+            sy=ty+tl.length*(tFS+8)+20,
+            tgY=sy+sl.length*40+30;
+          const ts=160,ttw=cfg.tags.length*ts,tXs=Math.max((1200-ttw)/2,100);
+          const tsvg=cfg.tags.map((t,i)=>{const x=tXs+i*ts,pw=Math.min(t.length*10+30,140);
+            return"<rect x=\""+x+"\" y=\""+tgY+"\" width=\""+pw+"\" height=\"32\" rx=\"16\" fill=\"rgba("+ar+",0.1)\" stroke=\"rgba("+ar+",0.3)\" stroke-width=\"1\"/><text x=\""+(x+pw/2)+"\" y=\""+(tgY+22)+"\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"16\" fill=\""+ac+"\">"+esc(t)+"</text>"}).join("");
+          const spY=tgY+52,aY=spY+40;
+          const svg="<?xml version=\"1.0\" encoding=\"UTF-8\"?><svg width=\"1200\" height=\"630\" viewBox=\"0 0 1200 630\" xmlns=\"http://www.w3.org/2000/svg\"><defs><linearGradient id=\"tB\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\""+ac+"\" stop-opacity=\"1\"/><stop offset=\"100%\" stop-color=\""+ac+"\" stop-opacity=\"0.3\"/></linearGradient><linearGradient id=\"bB\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"0\"><stop offset=\"0%\" stop-color=\""+ac+"\" stop-opacity=\"0.3\"/><stop offset=\"100%\" stop-color=\""+ac+"\" stop-opacity=\"1\"/></linearGradient></defs><rect width=\"1200\" height=\"630\" fill=\""+bg+"\"/><rect width=\"1200\" height=\"6\" fill=\"url(#tB)\"/><rect y=\"624\" width=\"1200\" height=\"6\" fill=\"url(#bB)\"/><rect x=\"150\" y=\"80\" width=\"900\" height=\"470\" rx=\"20\" fill=\""+cb+"\" stroke=\""+bd+"\" stroke-width=\"1\"/><text x=\"600\" y=\"180\" text-anchor=\"middle\" font-size=\"64\">"+cfg.emoji+"</text>"+tl.map((l,i)=>"<text x=\"600\" y=\""+(ty+i*(tFS+8))+"\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\""+tFS+"\" font-weight=\"bold\" fill=\""+fg+"\">"+l+"</text>").join("")+sl.map((l,i)=>"<text x=\"600\" y=\""+(sy+i*40)+"\" text-anchor=\"middle\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"26\" fill=\""+mt+"\">"+l+"</text>").join("")+tsvg+"<rect x=\"560\" y=\""+spY+"\" width=\"80\" height=\"3\" rx=\"2\" fill=\""+ac+"\" opacity=\"0.6\"/><circle cx=\"565\" cy=\""+(aY+4)+"\" r=\"10\" fill=\""+ac+"\" opacity=\"0.8\"/><text x=\"585\" y=\""+(aY+10)+"\" font-family=\"DejaVu Sans,system-ui,sans-serif\" font-size=\"20\" fill=\""+mt+"\">by "+esc(cfg.author)+"</text></svg>";
+          const resvg=new Resvg(svg,{background:bg,fitTo:{mode:"width",value:1200}});
+          const png=resvg.render().asPng();
+          fs.writeFileSync("social-preview.png",png);
+          fs.writeFileSync("og-image.png",png);
+          console.log("Generated social-preview.png ("+Math.round(png.length/1024)+" KB) and og-image.png");
+          '
 
       - name: Commit & Push
         run: |
